@@ -1,6 +1,9 @@
 # tls-scanning-reporting
 
-Middels dit script kan een scan van testssl.sh ingelezen worden en aan de hand van de classificatie zoals ingesteld in classification.conf gerapporteerd worden naar een in te stellen HTML bestand.
+Middels dit script kan een scan van testssl.sh ingelezen worden en aan de hand van de classificatie zoals ingesteld in classifications.conf gerapporteerd worden naar een in te stellen HTML bestand:
+```
+./analyze.sh <output-testssl>.json <outputreport>.html
+```
 
 
 Het testssl.sh script (zie https://github.com/testssl/testssl.sh) kan op basis van een inputfile werken, die per te scannen IP:poort combinatie de volgende regel moet bevatten:
