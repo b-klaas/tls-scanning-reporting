@@ -1,6 +1,9 @@
 # tls-scanning-reporting
 
-Het testssl.sh script kan op basis van een inputfile werken, die per te scannen IP:poort combinatie de volgende regel moet bevatten:
+Middels dit script kan een scan van testssl.sh ingelezen worden en aan de hand van de classificatie zoals ingesteld in classification.conf gerapporteerd worden naar een in te stellen HTML bestand.
+
+
+Het testssl.sh script (zie https://github.com/testssl/testssl.sh) kan op basis van een inputfile werken, die per te scannen IP:poort combinatie de volgende regel moet bevatten:
 ```
 -n none -e -s -f -p -S -P -h <IP>:<poort>
 ```
