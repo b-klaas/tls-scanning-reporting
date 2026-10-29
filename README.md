@@ -23,9 +23,9 @@ De gebruikte opties zijn:
 -h	tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address
 ```
 
-De inputfile kan gegenereerd worden met de hand, of bijvoorbeeld op basis van een nmap scan, waarbij te scannen poortnummers vooraf aangegeven kunnen worden:
+De inputfile kan gegenereerd worden met de hand, of bijvoorbeeld op basis van een nmap scan, waarbij te scannen poortnummers vooraf aangegeven kunnen worden (Pn is optioneel);
 ```
-nmap -n -v -p443,8443,9443 -P0 --open 10.20.78.0/24 -oG nmap-output
+nmap -n -v -p443,8443,9443 -Pn --open 10.20.78.0/24 -oG nmap-output
 ```
 
 Deze nmap-output kan vervolgens direct in het testssl script geladen worden als input, waarbij de naam van de json output file opgegeven dient te worden::
