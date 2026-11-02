@@ -100,8 +100,18 @@ generate_table() {
     jq -r "$jq_filter" "$JSON" | while IFS=$'\t' read -r val finding hosts; do
         [[ -z "$val" ]] && continue
         # Determine level
-        if [[ "$title" == "TLS versies" && "${finding,,}" =~ ^not\ offered ]]; then
-            level="n.v.t."
+        if [[ "$title" == "TLS versies" ]]; then
+            case "${finding,,}" in
+                "not offered"*)
+                    level="n.v.t."
+                    ;;
+                "offered"*)
+                    level=$(classify "$classify_key" "$val")
+                    ;;
+                *)
+                    level="ONBEKEND"
+                    ;;
+            esac
         else
             level=$(classify "$classify_key" "$val")
         fi
