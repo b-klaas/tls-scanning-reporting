@@ -130,7 +130,7 @@ group_by([.id, .finding]) |
 map({
   id: .[0].id,
   finding: .[0].finding,
-  hosts: (map(.ip | split("/") | .[1]) | unique | join(","))
+  hosts: (map(((.ip | split("/") | .[1]) + ":" + (.port|tostring))) | unique | join(","))
 }) |
 .[] | [.id, .finding, .hosts] | @tsv
 ' "TLSVER"
@@ -142,7 +142,7 @@ generate_table "Certificaten" "<th>Signature algorithm</th><th>Classificatie</th
 map(select(.id|startswith("cert_signatureAlgorithm"))) |
 map({
   words: [.finding],
-  host: (.ip | split("/") | .[1])
+  host: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))
 }) |
 map(.words[] as $w | {val: $w, finding: $w, hosts: .host}) |
 group_by(.val) |
@@ -155,7 +155,7 @@ generate_table "" "<th>Key size</th><th>Classificatie</th>" '
 map(select(.id|startswith("cert_keySize"))) |
 map({
   words: [.finding],
-  host: (.ip | split("/") | .[1])
+  host: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))
 }) |
 map(.words[] as $w | {val: $w, finding: $w, hosts: .host}) |
 group_by(.val) |
@@ -166,7 +166,7 @@ map({val: .[0].val, finding: .[0].finding, hosts: (map(.hosts) | unique | join("
 # Ciphers TLS 1.2
 generate_table "TLSv1.2 ciphers" "<th>Cipher</th><th>Classificatie</th>" '
 map(select(.id|startswith("cipher-tls1_2"))) |
-map({val: (.finding | [splits("\\s+")][-1]), finding: .finding, hosts: (.ip | split("/") | .[1])}) |
+map({val: (.finding | [splits("\\s+")][-1]), finding: .finding, hosts: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))}) |
 group_by(.val) |
 map({val: .[0].val, finding: .[0].finding, hosts: (map(.hosts)|unique|join(","))}) |
 .[] | [.val, .finding, .hosts] | @tsv
@@ -175,7 +175,7 @@ map({val: .[0].val, finding: .[0].finding, hosts: (map(.hosts)|unique|join(","))
 # Ciphers TLS 1.3
 generate_table "TLSv1.3 ciphers" "<th>Cipher</th><th>Classificatie</th>" '
 map(select(.id|startswith("cipher-tls1_3"))) |
-map({val: (.finding | [splits("\\s+")][-1]), finding: .finding, hosts: (.ip | split("/") | .[1])}) |
+map({val: (.finding | [splits("\\s+")][-1]), finding: .finding, hosts: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))}) |
 group_by(.val) |
 map({val: .[0].val, finding: .[0].finding, hosts: (map(.hosts)|unique|join(","))}) |
 .[] | [.val, .finding, .hosts] | @tsv
@@ -186,7 +186,7 @@ generate_table "Diffie Hellman" "<th>Type</th><th>Naam</th><th>Classificatie</th
 map(select(.id=="DH_groups")) |
 map({
   words: (if (.finding|startswith("RFC")) then [.finding] else (.finding|split(" ")|unique|sort) end),
-  host: (.ip | split("/") | .[1])
+  host: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))
 }) |
 map(.words[] as $w | {val: $w, finding: $w, hosts: .host}) |
 group_by(.val) |
@@ -199,7 +199,7 @@ generate_table "Elliptic Curves" "<th>Type</th><th>Naam</th><th>Classificatie</t
 map(select(.id|test("^(FS_ECDHE_curves|FS_KEMs)$"))) |
 map({
   words: (if (.finding|startswith("RFC")) or (.finding|startswith("No KEMs offered")) then [.finding] else (.finding|split(" ")|unique|sort) end),
-  host: (.ip | split("/") | .[1])
+  host: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))
 }) |
 map(.words[] as $w | {val: $w, finding: $w, hosts: .host}) |
 group_by(.val) |
@@ -212,7 +212,7 @@ generate_table "Signature algorithms" "<th>Type</th><th>Naam</th><th>Classificat
 map(select(.id|test("^(FS_TLS12_sig_algs|FS_TLS13_sig_algs)$"))) |
 map({
   words: (.finding|split(" ")|unique|sort),
-  host: (.ip | split("/") | .[1])
+  host: ((.ip | split("/") | .[1]) + ":" + (.port|tostring))
 }) |
 map(.words[] as $w | {val: $w, finding: $w, hosts: .host}) |
 group_by(.val) |
